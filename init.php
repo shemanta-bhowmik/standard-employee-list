@@ -1,4 +1,5 @@
-<?php /*
+<?php 
+/*
 Plugin Name: Standard Employee List
 Plugin URI: http://batch24.xyz/demo/plugins
 Author: Sujan
@@ -6,8 +7,6 @@ Author URI: http://mtmsujan.com
 Version: 1.0 
 Description: Standard and Easy to Use Employee List Plugin
 */
-
-
 
 class Employee {
 	public function __construct(){
@@ -78,7 +77,7 @@ class Employee {
 		);
 
 		$args = array(
-			'hierarchical'      => true,
+			'hirearchical'      => true,
 			'labels'            => $labels,
 			'show_ui'           => true,
 			'show_admin_column' => true,
@@ -98,7 +97,21 @@ class Employee {
 	}
 	public function employee_information(){
 
-		$value = get_post_meta(get_the_id(), 'employee-info', true);
+		// personal info getting
+		$father_val = get_post_meta( get_the_id(), 'ei_father', true );
+		$mother_val = get_post_meta( get_the_id(), 'ei_mother', true );
+		$gender_val = get_post_meta( get_the_id(), 'ei_gender', true );
+
+		// official info getting
+		$designation_val = get_post_meta( get_the_id(), 'ei_designation', true );
+		
+		// academic info getting
+		$sscyear_val = get_post_meta( get_the_id(), 'ei_sscyear', true );
+		$hscyear_val = get_post_meta( get_the_id(), 'ei_hscyear', true );
+		$bscyear_val = get_post_meta( get_the_id(), 'ei_bscyear', true );
+
+		// experience info getting
+		$skills_val = get_post_meta( get_the_id(), 'ei_skills', true );
 
 		?>
 
@@ -109,50 +122,156 @@ class Employee {
 		    <li><a href="#academic">Academic Information</a></li>
 		    <li><a href="#experience">Experience</a></li>
 		  </ul>
+
+		 <!-- Personal Informations -->
 		  <div id="personal">
 		    <p><label for="father">Father's Name</label></p>
-		    <p><input type="text" class="widefat" name="father" value="" id="father"></p>
+		    <p><input type="text" class="widefat" name="father" value="<?php echo $father_val; ?>" id="father"></p>
 		    <p><label for="mother">Mother's Name</label></p>
-		    <p><input type="text" class="widefat" name="mother" value="" id="mother"></p>
+		    <p><input type="text" class="widefat" name="mother" value="<?php echo $mother_val; ?>" id="mother"></p>
 
 		    <p>
-		    	<input type="radio" class="widefat" name="gender" value="male" id="male">
+		    	<input type="radio" name="gender" value="male" <?php if ( $gender_val == 'male' ) { echo 'checked="checked"'; } ?> id="male">
 		    	<label for="male"> Male</label> <br>
-		    	<input type="radio" class="widefat" name="gender" value="female" id="female">
+		    	<input type="radio" name="gender" value="female" <?php if ( $gender_val == 'female' ) { echo 'checked="checked"'; } ?> id="female">
 		    	<label for="female">Female</label>
 		    </p>
 		  </div>
 
-
+		  <!-- Official Information -->
 		  <div id="official">
 		    <p><label for="designation">Designation</label></p>
-		    <p><input type="text" class="widefat" name="designation" value="" id="designation"></p>
+		    <p><input type="text" class="widefat" name="designation" value="<?php echo $designation_val; ?>" id="designation"></p>
 		  </div>
 
-
+		  <!-- Academic Informations -->
 		  <div id="academic">
 		    <p><label for="sscyear">SSC Year</label></p>
-		    <p><input type="text" class="widefat" name="sscyear" value="" id="sscyear"></p>
+		    <p><input type="number" class="widefat" name="sscyear" value="<?php echo $sscyear_val; ?>" id="sscyear"></p>
+			<p><label for="hscyear">HSC Year</label></p>
+		    <p><input type="number" class="widefat" name="hscyear" value="<?php echo $hscyear_val; ?>" id="sscyear"></p>
+			<p><label for="bscyear">BSC Year</label></p>
+		    <p><input type="number" class="widefat" name="bscyear" value="<?php echo $bscyear_val; ?>" id="sscyear"></p>
 		  </div>
 
-
+		  <!-- Experience -->
 		  <div id="experience">
 		    <p><label for="skills">Skills:</label></p>
-		    <p><input type="text" class="widefat" name="skills" value="" id="skills"></p>
+		    <p><input type="text" class="widefat" name="skills" value="<?php echo $skills_val; ?>" id="skills"></p>
 		  </div>
 
 		</div>
 		<?php 
 	}
 
-	public function employee_metabox_save($post_id){
+	public function employee_metabox_save(){
 
-		$designation = $_POST['employee_designation'];
-		update_post_meta($post_id, 'employee-info', $designation);
+		// personal info
+		$father 	 = isset( $_REQUEST['father'] ) ? $_REQUEST['father'] : ' ';
+		$mother 	 = isset( $_REQUEST['mother'] ) ? $_REQUEST['mother'] : ' ';
+		$gender 	 = isset( $_REQUEST['gender'] ) ? $_REQUEST['gender'] : ' ';
+		// official info
+		$designation = isset( $_REQUEST['designation'] ) ? $_REQUEST['designation'] : ' ';
+		// academic info
+		$sscyear 	 = isset( $_REQUEST['sscyear'] ) ? $_REQUEST['sscyear'] : ' ';
+		$hscyear 	 = isset( $_REQUEST['hscyear'] ) ? $_REQUEST['hscyear'] : ' ';
+		$bscyear 	 = isset( $_REQUEST['bscyear'] ) ? $_REQUEST['bscyear'] : ' ';
+		// experience info
+		$skills 	 = isset( $_REQUEST['skills'] ) ? $_REQUEST['skills'] : ' ';
+
+		// personal data send
+		update_post_meta( get_the_id(), 'ei_father', $father );
+		update_post_meta( get_the_id(), 'ei_mother', $mother );
+		update_post_meta( get_the_id(), 'ei_gender', $gender );
+
+		// official data send
+		update_post_meta( get_the_id(), 'ei_designation', $designation );
+
+		// academic data send
+		update_post_meta( get_the_id(), 'ei_sscyear', $sscyear );
+		update_post_meta( get_the_id(), 'ei_hscyear', $hscyear );
+		update_post_meta( get_the_id(), 'ei_bscyear', $bscyear );
+
+		// experience data send
+		update_post_meta( get_the_id(), 'ei_skills', $skills );
+	
 	}
 
+	/**
+	 * Shortcode of Dynamic Employee Search Shortcode
+	 */
+	public function dynamic_employee_search_sc() {
+
+		add_shortcode( 'dynamic-employee-search', [ $this, 'dynamic_employee_search_func' ] );
+
+	}
+
+	public function dynamic_employee_search_func() {
+
+		ob_start();
+		
+		global $post;
+		$id  = $post->ID;
+		$url = get_permalink( $id );
+		
+		?>
+
+		<style>
+			input,
+			select {
+				width: 100%;
+				margin-bottom: 10px !important;
+			}
+		</style>
+
+		<form action="<?php echo $url; ?>" method="GET">
+			<input type="hidden" name="search" value="employeelist">
+			<input type="text" placeholder="Name" name="employee-name">
+			<select name="sscyear">
+				<option value="">Select SSC Year</option>
+				<?php 
+					$num = 2000;
+					while( $num < 2020 ) :
+					$num++;
+				?>
+				<option value="<?php echo $num; ?>"><?php echo $num; ?></option>
+				<?php
+					endwhile;
+				?>
+			</select>
+			<select name="skills">
+				<option value="">Select Skills</option>
+				<option value="wordpress">WordPress</option>
+				<option value="megento">Megento</option>
+				<option value="laravel">Laravel</option>
+				<option value="rawphp">Raw PHP</option>
+				<option value="javascript">Javascript</option>
+			</select>
+			<input type="submit" value="Search Now">
+		</form>
+
+		<?php return ob_get_clean();
+
+	}
+
+	public function employee_temp_change_filter_func() {
+
+		add_filter( 'template_include', [ $this, 'employee_temp_filter_func' ] );
+
+	}
+
+	public function employee_temp_filter_func( $defaults ) {
+
+		if ( isset( $_GET['search'] ) && $_GET['search'] == 'employeelist' ) {
+			$defaults = __DIR__ . '/employee.php';
+		}
+
+		return $defaults;
+
+	}
 
 }
 
-
 $employee = new Employee();
+$employee -> dynamic_employee_search_sc();
+$employee -> employee_temp_change_filter_func();

@@ -13,6 +13,9 @@
 #tabs {
 	overflow: hidden;
 }
+#tabs input {
+	border-radius: 0;
+}
 #tabs ul {
 	margin-right: 50px;
 }
@@ -25,10 +28,14 @@
 }
 #tabs li a {
 	padding: 10px;
+	width: 100%;
+	box-sizing: border-box;
 	text-decoration: none;
 	display: inline-block;
 }
 #tabs div {
-	padding: 35px;
+	padding: 20px 35px;
 	border: 1px solid #eee;
+	background-color: #f3f6f9;
+	margin-top: 13px;
 }
